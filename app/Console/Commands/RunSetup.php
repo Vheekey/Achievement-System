@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Achievement;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 
 class RunSetup extends Command
 {
@@ -44,13 +46,30 @@ class RunSetup extends Command
             return;
         }
 
+        if(! env('CACHE_DRIVER') || ! in_array(env('CACHE_DRIVER'), ['database', 'redis']))
+        {
+            $this->info('Cache driver key must be set to database or redis');
+
+            return;
+        }
+
         $this->info('Running Migration...');
         Artisan::call('migrate');
         $this->info('Migration Completed!');
 
-        $this->info('Creating Users...');
+        $this->info('Seeding DB...');
         Artisan::call('db:seed');
-        $this->info('Users Seeded!');
+        $this->info('DB Seeded!');
+
+        $achievements = Achievement::get();
+
+        $lesson_achievements = Achievement::where('group', Achievement::LESSON)->pluck('category')->toArray();
+        $comments_achievements = Achievement::where('group', Achievement::COMMENT)->pluck('category')->toArray();
+
+        Cache::put('achievements', json_encode($achievements));
+        Cache::put('lesson_achievements', json_encode($lesson_achievements));
+        Cache::put('comment_achievements', json_encode($comments_achievements));
+        Cache::put('achievements_count', $achievements->count());
 
         $this->info('Setup Complete!');
     }

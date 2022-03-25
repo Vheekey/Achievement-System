@@ -11,7 +11,7 @@ use JsonSerializable;
 
 trait HasJsonResponse
 {
-    use Translatable;
+    use Translatable, Caches;
 
     /**
      * Choose to wrap data or not.

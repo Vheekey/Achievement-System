@@ -9,12 +9,6 @@ class AchievementsController extends Controller
 {
     public function index(User $user)
     {
-        return response()->json([
-            'unlocked_achievements' => [],
-            'next_available_achievements' => [],
-            'current_badge' => '',
-            'next_badge' => '',
-            'remaining_to_unlock_next_badge' => 0
-        ]);
+        return $this->jsonResponse(HTTP_SUCCESS, 'User achievements', $this->getCachedDetails($user));
     }
 }

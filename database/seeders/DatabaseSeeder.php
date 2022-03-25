@@ -4,10 +4,13 @@ namespace Database\Seeders;
 
 use App\Models\Lesson;
 use App\Models\User;
+use App\Traits\Caches;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+    use Caches;
+
     /**
      * Seed the application's database.
      *
@@ -15,9 +18,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call([
+            AchievementSeeder::class
+        ]);
+
         $lessons = Lesson::factory()
             ->count(20)
             ->create();
-        User::factory(5)->create();
+
+        $users = User::factory(5)->create()->each(function ($user){
+            $this->cacheAchievements($user, [], true);
+        });
     }
 }
