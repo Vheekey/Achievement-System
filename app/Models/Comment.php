@@ -10,6 +10,16 @@ class Comment extends Model
 {
     use HasFactory;
 
+    const MILESTONES = [1, 3, 5, 10, 20];
+
+    const ACHIEVEMENTS = [
+        1 => 'First Comment Written',
+        3 => '3 Comments Written',
+        5 => '5 Comments Written',
+        10 => '10 Comments Written',
+        20 => '20 Comments Written'
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
