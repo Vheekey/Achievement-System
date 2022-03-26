@@ -2,13 +2,14 @@
 
 namespace App\Listeners;
 
+use App\Traits\AchievementUtil;
 use App\Traits\Caches;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
 class ProcessAchievement
 {
-    use Caches;
+    use Caches, AchievementUtil;
 
     /**
      * Create the event listener.
@@ -29,5 +30,7 @@ class ProcessAchievement
     public function handle($event)
     {
         $this->performAchievementCaches($event->user, $event->achievement);
+
+        return self::getAchievementResponse($event->achievement);
     }
 }

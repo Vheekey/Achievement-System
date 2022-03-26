@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         $users = User::factory(5)->create()->each(function ($user){
+            // $user->lessons()->attach(Lesson::select('id')->orderByRaw("RAND()")->first()->id);
+
             $this->cacheAchievements($user, [], true);
         });
     }

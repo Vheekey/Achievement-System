@@ -1,42 +1,45 @@
 <?php
 
-namespace App\Services\Achievements\Types;
+namespace App\Services\Achievement\Types;
 
 use App\Events\AchievementUnlocked;
 use App\Events\BadgeUnlocked;
-use App\Listeners\CommentAchievementUnlocked;
 use App\Models\Achievement;
-use App\Models\Comment;
-use App\Services\Contracts\AchievementTypeInterface;
+use App\Models\Comment as CommentModel;
+use App\Services\Achievement\Contracts\AchievementTypeInterface;
 use App\Traits\AchievementUtil;
 use App\Traits\Caches;
 use Illuminate\Support\Facades\Cache;
 
-class Comments implements AchievementTypeInterface{
+class Comment implements AchievementTypeInterface{
 
     use Caches, AchievementUtil;
 
-    public function __construct(Comment $comment)
+    public function __construct(CommentModel $comment)
     {
         $this->comment = $comment;
     }
 
-    public function handle() : void
+    public function handle() : array
     {
         if(! $this->isAchievement()){
-            return;
+            return [];
         }
 
-        AchievementUnlocked::dispatch($this->getAchievement(), $this->comment->user);
+        $responses = [];
+
+        $responses[] = AchievementUnlocked::dispatch($this->getAchievement(), $this->comment->user)[0];
 
         if($this->isBadgeWorthy()){
-            BadgeUnlocked::dispatch($this->getBadge(), $this->comment->user);
+            $responses[] = BadgeUnlocked::dispatch($this->getBadge(), $this->comment->user)[0];
         }
+
+        return $responses;
     }
 
     public function getAchievement() : string
     {
-        return Comment::ACHIEVEMENTS[$this->comment->id];
+        return CommentModel::ACHIEVEMENTS[$this->comment->id];
     }
 
     public function getBadge() : string
@@ -60,6 +63,6 @@ class Comments implements AchievementTypeInterface{
 
     private function isAchievement() : bool
     {
-        return in_array($this->comment->id, Comment::MILESTONES);
+        return in_array($this->comment->id, CommentModel::MILESTONES);
     }
 }

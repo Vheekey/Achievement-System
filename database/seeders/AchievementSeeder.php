@@ -49,11 +49,11 @@ class AchievementSeeder extends Seeder
                 'group' => Achievement::COMMENT,
             ],
             [
-                'category' => '10 Comment Written',
+                'category' => '10 Comments Written',
                 'group' => Achievement::COMMENT,
             ],
             [
-                'category' => '20 Comment Written',
+                'category' => '20 Comments Written',
                 'group' => Achievement::COMMENT,
             ]
         );

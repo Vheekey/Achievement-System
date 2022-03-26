@@ -2,16 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Traits\AchievementUtil;
-use App\Traits\Caches;
+use App\Services\Achievement\Types\Lesson;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Cache;
 
-class ProcessBadge
+class ProcessLesson
 {
-    use Caches, AchievementUtil;
-
     /**
      * Create the event listener.
      *
@@ -30,8 +26,6 @@ class ProcessBadge
      */
     public function handle($event)
     {
-        $this->performBadgeCaches($event->user, $event->badge_name);
-
-        return self::getBadgeResponse($event->badge_name);
+        return (new Lesson($event->lesson, $event->user))->handle();
     }
 }

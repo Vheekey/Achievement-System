@@ -21,4 +21,14 @@ trait AchievementUtil
 
         return $milestone_badge;
     }
+
+    public static function getBadgeResponse(string $badge)
+    {
+        return 'Hurray🎉! You have unlocked a badge. '. $badge. ' badge awarded!';
+    }
+
+    public static function getAchievementResponse(string $achievement)
+    {
+        return 'Hurray🎉! You have unlocked an achievement. '. $achievement. ' achievement reached!';
+    }
 }

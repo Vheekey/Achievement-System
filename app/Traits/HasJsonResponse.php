@@ -35,7 +35,7 @@ trait HasJsonResponse
         $normalizeData = $this->normalizeData($data);
 
         $messageData = $this->retrieveResponseMessage(
-            $message ?: 'Request was received', $normalizeData, $isSuccessful
+            $message ?: '', $normalizeData, $isSuccessful
         );
 
         $responseData = ['success' => $isSuccessful, 'message' => $messageData['message']];

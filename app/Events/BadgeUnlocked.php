@@ -16,6 +16,7 @@ class BadgeUnlocked
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
+
     public $badge_name;
 
     /**
@@ -26,16 +27,7 @@ class BadgeUnlocked
     public function __construct(string $badge_name, User $user)
     {
         $this->user = $user;
-        $this->badge_name = $badge_name;
-    }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
+        $this->badge_name = $badge_name;
     }
 }
