@@ -9,16 +9,6 @@ use Illuminate\Queue\InteractsWithQueue;
 class ProcessLesson
 {
     /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Handle the event.
      *
      * @param  object  $event
