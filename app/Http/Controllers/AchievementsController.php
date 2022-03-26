@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\CommentWritten;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
+use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -31,5 +32,10 @@ class AchievementsController extends Controller
         CommentWritten::dispatch($comment);
 
         return $this->jsonResponse(HTTP_CREATED, 'Comment Saved');
+    }
+
+    public function watchLesson(Lesson $lesson)
+    {
+        
     }
 }

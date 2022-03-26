@@ -2,15 +2,13 @@
 
 namespace App\Listeners;
 
-use App\Traits\AchievementUtil;
 use App\Traits\Caches;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Cache;
 
-class ProcessBadge
+class ProcessAchievement
 {
-    use Caches, AchievementUtil;
+    use Caches;
 
     /**
      * Create the event listener.
@@ -30,6 +28,6 @@ class ProcessBadge
      */
     public function handle($event)
     {
-        $this->performBadgeCaches($event->user, $event->badge_name);
+        $this->performAchievementCaches($event->user, $event->achievement);
     }
 }

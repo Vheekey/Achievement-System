@@ -8,12 +8,13 @@ use App\Listeners\CommentAchievementUnlocked;
 use App\Models\Achievement;
 use App\Models\Comment;
 use App\Services\Contracts\AchievementTypeInterface;
+use App\Traits\AchievementUtil;
 use App\Traits\Caches;
 use Illuminate\Support\Facades\Cache;
 
 class Comments implements AchievementTypeInterface{
 
-    use Caches;
+    use Caches, AchievementUtil;
 
     public function __construct(Comment $comment)
     {
@@ -26,18 +27,27 @@ class Comments implements AchievementTypeInterface{
             return;
         }
 
-        $this->unlockAchievement();
-        
+        AchievementUnlocked::dispatch($this->getAchievement(), $this->comment->user);
+
         if($this->isBadgeWorthy()){
-            BadgeUnlocked::dispatch($this->comment->user);
+            BadgeUnlocked::dispatch($this->getBadge(), $this->comment->user);
         }
     }
 
-    public function unlockAchievement() : void
+    public function getAchievement() : string
     {
-        $achievement = Comment::ACHIEVEMENTS[$this->comment->id];
+        return Comment::ACHIEVEMENTS[$this->comment->id];
+    }
 
-        $this->performAchievementCaches($this->comment->user, $achievement);
+    public function getBadge() : string
+    {
+        $user_unlocked_achievements_key = $this->getUserAchievementCacheKey($this->comment->user, 'unlocked_achievements');
+        $user_unlocked_achievements = json_decode(Cache::get($user_unlocked_achievements_key), true);
+
+        $count = count($user_unlocked_achievements);
+        $badge = AchievementUtil::getMileStoneBadge($count);
+
+        return $badge;
     }
 
     private function isBadgeWorthy()

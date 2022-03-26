@@ -63,11 +63,11 @@ trait Caches
      * @param string $achievement
      * @return void
      */
-    public function performBadgeCaches(User $user)
+    public function performBadgeCaches(User $user, string $badge_name)
     {
-        $this->cacheCurrentBadge($user);
+        $this->cacheCurrentBadge($user, $badge_name);
 
-        $this->cacheNextBadge($user);
+        $this->cacheNextBadge($user, $badge_name);
     }
 
     /**
@@ -189,14 +189,8 @@ trait Caches
      * @param string $badge
      * @return void
      */
-    public function cacheCurrentBadge(User $user)
+    public function cacheCurrentBadge(User $user, string $badge)
     {
-        $user_unlocked_achievements_key = $this->getUserAchievementCacheKey($this->comment->user, 'unlocked_achievements');
-        $user_unlocked_achievements = json_decode(Cache::get($user_unlocked_achievements_key), true);
-
-        $count = count($user_unlocked_achievements);
-        $badge = AchievementUtil::getMileStoneBadge($count);
-
         $key = $this->getUserAchievementCacheKey($user, 'current_badge');
 
         Cache::put($key, $badge);
@@ -206,13 +200,11 @@ trait Caches
      * Cache user's next badge
      *
      * @param User $user
+     * @param string $current_badge
      * @return void
      */
-    public function cacheNextBadge(User $user)
+    public function cacheNextBadge(User $user, string $current_badge)
     {
-        $current_badge_key = $this->getUserAchievementCacheKey($user, 'current_badge');
-        $current_badge = Cache::get($current_badge_key);
-
         $index = array_search($current_badge, Achievement::BADGES);
         $next_badge = is_null($current_badge) ? Achievement::BADGES[1] : Achievement::BADGES[$index+1];
 

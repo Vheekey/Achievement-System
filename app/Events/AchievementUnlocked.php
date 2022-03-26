@@ -11,22 +11,24 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BadgeUnlocked
+class AchievementUnlocked
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
-    public $badge_name;
+
+    public $achievement;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(string $badge_name, User $user)
+    public function __construct(string $achievement, User $user)
     {
+        $this->achievement = $achievement;
+
         $this->user = $user;
-        $this->badge_name = $badge_name;
     }
 
     /**
