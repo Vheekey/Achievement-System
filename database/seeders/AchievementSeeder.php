@@ -14,7 +14,14 @@ class AchievementSeeder extends Seeder
      */
     public function run()
     {
-        $achievements = array(
+        $achievements = self::achievements();
+
+        Achievement::upsert($achievements, ['category', 'group'], ['category']);
+    }
+
+    public static function achievements()
+    {
+        return array(
             [
                 'category' => 'First Lesson Watched',
                 'group' => Achievement::LESSON,
@@ -57,7 +64,5 @@ class AchievementSeeder extends Seeder
                 'group' => Achievement::COMMENT,
             ]
         );
-
-        Achievement::upsert($achievements, ['category', 'group'], ['category']);
     }
 }

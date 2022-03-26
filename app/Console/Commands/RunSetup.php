@@ -3,12 +3,15 @@
 namespace App\Console\Commands;
 
 use App\Models\Achievement;
+use App\Traits\Caches;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 
 class RunSetup extends Command
 {
+    use Caches;
+
     /**
      * The name and signature of the console command.
      *
@@ -61,16 +64,8 @@ class RunSetup extends Command
         Artisan::call('db:seed');
         $this->info('DB Seeded!');
 
-        $achievements = Achievement::get();
-
-        $lesson_achievements = Achievement::where('group', Achievement::LESSON)->pluck('category')->toArray();
-        $comments_achievements = Achievement::where('group', Achievement::COMMENT)->pluck('category')->toArray();
-
-        Cache::put('achievements', json_encode($achievements));
-        Cache::put('lesson_achievements', json_encode($lesson_achievements));
-        Cache::put('comment_achievements', json_encode($comments_achievements));
-        Cache::put('achievements_count', $achievements->count());
-
+        self::putInitialCaches();
+        
         $this->info('Setup Complete!');
     }
 }

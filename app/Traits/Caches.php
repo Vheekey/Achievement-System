@@ -80,10 +80,10 @@ trait Caches
     {
         $keys = $this->getUserAchievementCacheKey($user);
 
-        $cached_details = [];
         foreach($keys as $key => $value){
             $detail = Cache::get($value);
-            $cached_details[$key] = ($this->isJson((string) $detail)) ? json_decode($detail, true) : $detail;
+            // $cached_details[$key] = ($this->checkJson((string) $detail)) ? json_decode($detail, true) : $detail;
+            $cached_details[$key] = $detail;
         }
 
         return $cached_details;
@@ -250,7 +250,20 @@ trait Caches
         return $closest;
     }
 
-    private function isJson($value) {
+    public static function putInitialCaches()
+    {
+        $achievements = Achievement::get();
+
+        $lesson_achievements = Achievement::where('group', Achievement::LESSON)->pluck('category')->toArray();
+        $comments_achievements = Achievement::where('group', Achievement::COMMENT)->pluck('category')->toArray();
+
+        Cache::put('achievements', json_encode($achievements));
+        Cache::put('lesson_achievements', json_encode($lesson_achievements));
+        Cache::put('comment_achievements', json_encode($comments_achievements));
+        Cache::put('achievements_count', $achievements->count());
+    }
+
+    private function checkJson($value) {
         json_decode($value);
 
         return (json_last_error() == JSON_ERROR_NONE);
