@@ -1,4 +1,5 @@
 
+# Achievement System
 
 ## To begin:
 
@@ -15,5 +16,5 @@
 ## To run tests
 ### Run php artisan test
 
-# Collection can be found here
+## Collection can be found here
 <a href="https://www.getpostman.com/collections/f641e73955dbfeb463c1"> Postman Collection </a>
